@@ -1,0 +1,27 @@
+on: [push]
+
+name: build
+
+jobs:
+  build_and_test:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os  }}-cargo-${{ hashFiles('**/Cargo.lock')  }}
+      - uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --all-features
+
+      - uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --all-features
+
